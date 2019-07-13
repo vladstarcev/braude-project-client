@@ -1,50 +1,72 @@
-import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from "@angular/core";
-import { trigger, transition, style, animate, animateChild, group, query } from "@angular/animations";
+import { Component, EventEmitter, HostBinding, Output } from '@angular/core';
+import { animate, animateChild, query, style, transition, trigger } from '@angular/animations';
 
 @Component({
-  selector: "app-login",
-  templateUrl: "./login.component.html",
-  styleUrls: ["./login.component.css"],
-  animations: [
-    trigger('animateModal', [
-        transition('* <=> *', [
-            query('@animateOverlay', animateChild())
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css'],
+    animations: [
+        trigger('host', [
+            transition(':leave', [
+                query('@overlay, @dialog', [
+                    animateChild()
+                ])
+            ]),
+            transition(':enter', [
+                query('@overlay, @dialog', [
+                    animateChild()
+                ])
+            ]),
         ]),
-      ]),
-      trigger("animateOverlay", [
-        transition('void => *', [
-            style({
-                opacity: '1'
-              }),
-            animate(300)
-        ]),
-        transition('* => void', [
-            animate(200, style({opacity: '0'}))
-        ])
-      ]),
-      trigger("animateDialog", [
-          transition('void => *', [
-              style({
-                  transform: 'scale3d(.5, .5, .5)',
-                  opacity: '1'
+        trigger('dialog', [
+            transition(':leave', [
+                style({
+                    transform: 'scale(1)'
                 }),
-              animate(300)
-          ]),
-          transition('* => void', [
-              animate(200, style({transform: 'scale3d(.0, .0, .0)', opacity: '0'}))
-          ])
-  ])
-]
+                animate('100ms ease-out', style({
+                    transform: 'scale(1.2)'
+                })),
+                animate('300ms ease-in', style({
+                    transform: 'scale(0)'
+                }))
+            ]),
+            transition(':enter', [
+                style({
+                    transform: 'scale(0.5)'
+                }),
+                animate('200ms ease-out', style({
+                    transform: 'scale(1.2)'
+                })),
+                animate('100ms ease-out', style({
+                    transform: 'scale(1)'
+                }))
+            ]),
+        ]),
+        trigger('overlay', [
+            transition(':leave', [
+                style({
+                    opacity: 1,
+                }),
+                animate('230ms ease-in', style({
+                    opacity: 0,
+                }))
+            ]),
+            transition(':enter', [
+                style({
+                    opacity: 0,
+                }),
+                animate('230ms ease-in', style({
+                    opacity: 1,
+                }))
+            ]),
+        ])
+    ]
 })
 export class LoginComponent {
-    @Input() isModalOpen: boolean;
     @Output() emitCloseClick: EventEmitter<void> = new EventEmitter<void>();
-  @HostBinding('@animateModal')
-  @Input() get animateModal() {
-      return this.isModalOpen ? 'in' : undefined;
-  }
+    @HostBinding('@host') host;
 
-  handleCloseClick(): void {
-    this.emitCloseClick.emit();
-  }
+    handleCloseClick(): void {
+        this.emitCloseClick.emit();
+    }
 }
