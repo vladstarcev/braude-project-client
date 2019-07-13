@@ -1,0 +1,3 @@
+<app-header (emitClick)="toggleLogin(true)"></app-header>
+<router-outlet></router-outlet>
+<app-login *ngIf="showLoginPopup" (emitCloseClick)="toggleLogin(false)" [isModalOpen]="showLoginPopup"></app-login>
