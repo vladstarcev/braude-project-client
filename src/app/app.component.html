@@ -1,5 +1,5 @@
 <app-header (emitClick)="toggleLogin(true)"></app-header>
-<main [@routeAnimations]="o && o.activatedRouteData && o.activatedRouteData['animation']">
+<main [@routeAnimations]="o && o.activatedRouteData && o.activatedRouteData['animation']" class="container">
     <router-outlet #o="outlet"></router-outlet>
 </main>
 <app-login *ngIf="showLoginPopup" (emitCloseClick)="toggleLogin(false)"></app-login>
